@@ -109,6 +109,10 @@
         <footer>
             The point of this page is to hide the source page from the target website to prevent all kinds of tracking.
             <a href="https://github.com/AdguardTeam/AnonymousRedirect" class="link" target="_blank">Source code</a>.
+            Make sure you trust this website. This is a modified/revamped/updated version of AdGuard's version to be more "futuristic", by @aqplemine.
+            <a href="https://github.com/aqplemine/AnonymousRedirect" class="link" target="_blank">Source code</a>.
+            <a href="https://github.com/aqplemine" class="link" target="_blank">Developer</a>.
+            <a href="https://github.com/AdguardTeam/AnonymousRedirect" class="link" target="_blank">AdGuard's source code</a>.
         </footer>
     </div>
 
@@ -173,6 +177,15 @@
             } catch (e) {
                 return rawValue;
             }
+            if (!url) {
+                url = window.location.href;
+            }
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 
         function getHostname(url) {
@@ -220,6 +233,7 @@
         }
 
         var url = normalizeTargetUrl(getParameterByName('url'));
+        var url = getParameterByName('url');
         var host = getHostname(document.referrer);
 
         if (host === 'adguard.com' || host.endsWith('.adguard.com')) {
