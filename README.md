@@ -30,6 +30,13 @@ https://<your-user>.github.io/<your-repo>/redirect.html?url=[PUT URL HERE]
 4. Select your default branch (`main` or `master`) and folder `/ (root)`.
 5. Save.
 
+
+1. Push this repository to GitHub.
+2. In the repository settings, go to **Pages**.
+3. Under **Build and deployment**, choose **Deploy from a branch**.
+4. Select your default branch (`main` or `master`) and folder `/ (root)`.
+5. Save.
+
 Because the repository now includes a root `index.html` and a `.nojekyll` file, it is ready for direct branch deployment without any additional build step.
 
 ## Example
