@@ -107,8 +107,10 @@
         </div>
 
         <footer>
-            The point of this page is to hide the source page from the target website to prevent all kinds of tracking.
-            <a href="https://github.com/AdguardTeam/AnonymousRedirect" class="link" target="_blank">Source code</a>.
+            Make sure you trust this website. This is a modified/revamped/updated version of AdGuard's version to be more "futuristic", by @aqplemine.
+            <a href="https://github.com/aqplemine/AnonymousRedirect" class="link" target="_blank">Source code</a>.
+            <a href="https://github.com/aqplemine" class="link" target="_blank">Developer</a>.
+            <a href="https://github.com/AdguardTeam/AnonymousRedirect" class="link" target="_blank">AdGuard's source code</a>.
         </footer>
     </div>
 
@@ -158,32 +160,7 @@
             return hostname;
         }
 
-        function normalizeTargetUrl(rawUrl) {
-            if (!rawUrl) {
-                return '';
-            }
-
-            var normalizedUrl = rawUrl.trim();
-
-            if (!normalizedUrl) {
-                return '';
-            }
-
-            // URL already has a scheme (https:, http:, mailto:, etc.)
-            if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(normalizedUrl)) {
-                return normalizedUrl;
-            }
-
-            // Protocol-relative URL (//example.com)
-            if (normalizedUrl.indexOf('//') === 0) {
-                return 'https:' + normalizedUrl;
-            }
-
-            // Bare domains/hosts (example.com, localhost:3000, etc.)
-            return 'https://' + normalizedUrl;
-        }
-
-        var url = normalizeTargetUrl(getParameterByName('url'));
+        var url = getParameterByName('url');
         var host = getHostname(document.referrer);
 
         if (host === 'adguard.com' || host.endsWith('.adguard.com')) {

@@ -13,8 +13,6 @@ Use `index.html` (or just `/`) as the entry point:
 https://<your-user>.github.io/<your-repo>/?url=[PUT URL HERE]
 ```
 
-You can pass either a full URL (for example, `https://example.com`) or a bare host/domain (for example, `google.com`). Bare hosts are automatically normalized to `https://...`.
-
 Backward-compatible link:
 
 ```text
