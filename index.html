@@ -107,6 +107,8 @@
         </div>
 
         <footer>
+            The point of this page is to hide the source page from the target website to prevent all kinds of tracking.
+            <a href="https://github.com/AdguardTeam/AnonymousRedirect" class="link" target="_blank">Source code</a>.
             Make sure you trust this website. This is a modified/revamped/updated version of AdGuard's version to be more "futuristic", by @aqplemine.
             <a href="https://github.com/aqplemine/AnonymousRedirect" class="link" target="_blank">Source code</a>.
             <a href="https://github.com/aqplemine" class="link" target="_blank">Developer</a>.
@@ -130,6 +132,51 @@
         }
 
         function getParameterByName(name, url) {
+            var sourceUrl = url || window.location.href;
+
+            if (window.URL && window.URLSearchParams && name !== 'url') {
+                try {
+                    var parsedUrl = new URL(sourceUrl, window.location.href);
+                    var value = parsedUrl.searchParams.get(name);
+                    if (value !== null) {
+                        return value;
+                    }
+                } catch (e) {
+                    // Fall back to manual parsing below.
+                }
+            }
+
+            // Fallback for older browsers and malformed URLs.
+            // For the `url` parameter specifically, read everything until hash/end so
+            // links like ?url=https://example.com?a=1&b=2 still work without encoding.
+            var marker = '?' + name + '=';
+            var markerIndex = sourceUrl.indexOf(marker);
+
+            if (markerIndex < 0) {
+                marker = '&' + name + '=';
+                markerIndex = sourceUrl.indexOf(marker);
+            }
+
+            if (markerIndex < 0) {
+                return null;
+            }
+
+            var valueStart = markerIndex + marker.length;
+            var hashIndex = sourceUrl.indexOf('#', valueStart);
+            var rawValue = hashIndex >= 0 ? sourceUrl.slice(valueStart, hashIndex) : sourceUrl.slice(valueStart);
+
+            if (name !== 'url') {
+                var ampIndex = rawValue.indexOf('&');
+                if (ampIndex >= 0) {
+                    rawValue = rawValue.slice(0, ampIndex);
+                }
+            }
+
+            try {
+                return decodeURIComponent(rawValue.replace(/\+/g, " "));
+            } catch (e) {
+                return rawValue;
+            }
             if (!url) {
                 url = window.location.href;
             }
@@ -160,6 +207,32 @@
             return hostname;
         }
 
+        function normalizeTargetUrl(rawUrl) {
+            if (!rawUrl) {
+                return '';
+            }
+
+            var normalizedUrl = rawUrl.trim();
+
+            if (!normalizedUrl) {
+                return '';
+            }
+
+            // URL already has a scheme (https:, http:, mailto:, etc.)
+            if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(normalizedUrl)) {
+                return normalizedUrl;
+            }
+
+            // Protocol-relative URL (//example.com)
+            if (normalizedUrl.indexOf('//') === 0) {
+                return 'https:' + normalizedUrl;
+            }
+
+            // Bare domains/hosts (example.com, localhost:3000, etc.)
+            return 'https://' + normalizedUrl;
+        }
+
+        var url = normalizeTargetUrl(getParameterByName('url'));
         var url = getParameterByName('url');
         var host = getHostname(document.referrer);
 
